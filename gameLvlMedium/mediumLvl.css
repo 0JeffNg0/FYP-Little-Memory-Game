@@ -1,0 +1,93 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: rgb(235, 141, 243);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    letter-spacing: 0.1em;
+}
+.mediumLvl{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 30px;
+    background-color: rgb(212, 244, 118);
+    padding: 40px 60px;
+}
+.memoryGame{
+    width: 440px;
+    height: 440px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    transform-style: preserve-3d;
+    perspective: 500px;
+}
+.item{
+    position: relative;
+    width: 65px;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    background-color: white;
+    transform: rotateY(0deg);
+    transition: 0.1s;
+}
+.item.boxOpen{
+    transform: rotateY(0deg);
+}
+.item:after{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgb(7, 176, 176);
+    transition: 0.1s;
+    transform: rotateY(0deg);
+    backface-visibility: hidden;
+}
+.boxOpen:after, .match:after{
+    transform: rotateY(180deg);
+}
+.btnReset{
+    padding: 10px 15px;
+    background-color: rgb(251, 208, 157);
+    color: blue;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btnReset:focus{
+    background-color: rgb(243, 143, 20);
+    color: rgb(251, 251, 251);
+}
+.timer {
+    font-size: 18px;
+    font-weight: 600;
+}
+.exitBtn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #f44336;
+    color: white;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.exitBtn:hover {
+    background-color: #d32f2f;
+}

@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(181, 241, 255);
+}
+#historyTable {
+    margin-top: 20px;
+}
+th, td {
+text-align: center;
+}
+th {
+    background-color: #15bee9;
+    color: white;
+}

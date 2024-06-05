@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="easyLvl.css">
+    <title>Funny Intellect Game</title>
+</head>
+<body>
+    <div class = "easyLvl">
+        <h1>Memory Game</h1>
+        <h2>Difficulty Level - Easy</h2>
+        <div class="memoryGame"></div>
+        <div class="timer">Time: <span id="time">0</span> seconds</div> 
+        <button class="btnReset" onclick="window.location.reload();">Restart</button>
+        <a href="../home.html" class="exitBtn">Exit</a>
+        <!-- Background Music -->
+        <label>Background Music:
+            <input type="checkbox" id="bgMusicChecked" checked>
+        </label>
+    </div>
+
+    <audio id="bgMusic" src="../src/backgroundMusic.mp3" autoplay loop></audio>
+    <audio id="sucsMatch" src="../src/match_success.mp3"></audio>
+    <audio id="failMatch" src="../src/match_failure.mp3"></audio>
+    <audio id="winGame" src="../src/game_win.mp3"></audio>
+
+    <script>
+        // Score setting
+        const timeThresholds = [
+            { time: 30, percentage: 100 },
+            { time: 35, percentage: 90 },
+            { time: 40, percentage: 80 },
+            { time: 45, percentage: 70 },
+            { time: 50, percentage: 60 },
+            { time: 55, percentage: 50 },
+            { time: 60, percentage: 40 },
+            { time: 65, percentage: 0 }
+        ]
+
+        // Score calculate function based on the time taken
+        function calculateScore(timeTaken) {
+            for (let i = 0; i < timeThresholds.length; i++) {
+                if (timeTaken <= timeThresholds[i].time) {
+                    return timeThresholds[i].percentage
+                }
+            }
+            return 0
+        }
+
+        //Game Body
+        const emojis = ["😀","😀","😂","😂","😎","😎","😅","😅","😗","😗","😍","😍","😮","😮","😴","😴"]
+        var arr_emojis = emojis.sort(() => (Math.random() > .5) ? 2 : -1)
+        
+        var startTime = new Date().getTime() // Start timer
+
+        // Update timer every second
+        function updateTimer() {
+            var currentTime = new Date().getTime()
+            var elapsedTime = Math.floor((currentTime - startTime) / 1000) // Time elapsed in seconds
+            document.getElementById("time").textContent = elapsedTime
+        }
+
+        // Restart
+        function restartGame() {
+            window.location.reload()
+        }
+
+        setInterval(updateTimer, 1000) // Update timer
+        
+        for (var i=0; i<arr_emojis.length; i++) {
+            let box = document.createElement('div')
+            box.className = 'item'
+            box.innerHTML = arr_emojis[i]
+
+            box.onclick = function() {
+                this.classList.add('boxOpen')
+                setTimeout(function(){
+                    if(document.querySelectorAll('.boxOpen').length > 1){
+                        if(document.querySelectorAll('.boxOpen')[0].innerHTML == document.querySelectorAll('.boxOpen')[1].innerHTML){
+                            document.querySelectorAll('.boxOpen')[0].classList.add('match')
+                            document.querySelectorAll('.boxOpen')[1].classList.add('match')
+                            document.querySelectorAll('.boxOpen')[1].classList.remove('boxOpen')
+                            document.querySelectorAll('.boxOpen')[0].classList.remove('boxOpen')
+                            document.getElementById('sucsMatch').play() // Play success match sound
+
+                            if (document.querySelectorAll('.match').length === arr_emojis.length) {
+                                var endTime = new Date().getTime() // End timer
+                                var gameTime = Math.floor((endTime - startTime) / 1000) // Total game used time in seconds
+                                var gScore = calculateScore(gameTime) // Calculate score
+
+                                // Send score and time data to PHP script using AJAX
+                                // var xhr = new XMLHttpRequest()
+                                // xhr.open('POST', '../db_player.php', true)
+                                // xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+                                // xhr.onreadystatechange = function() {
+                                //     if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                                //         console.log(xhr.responseText); // Log response from PHP script
+                                //     }
+                                // }
+                                // xhr.send('playerName=' + playerName + '&gameLvl=easy' + '&score=' + gScore + '&usedTime=' + gameTime)
+
+                                document.getElementById('winGame').play() // Play win the game's sound
+                                alert('Congratulation! You have matched all emojis in ' + gameTime + ' seconds!\nScore: ' + gScore + '%')
+                                }
+                        } else {
+                                document.querySelectorAll('.boxOpen')[1].classList.remove('boxOpen')
+                                document.querySelectorAll('.boxOpen')[0].classList.remove('boxOpen')
+                                document.getElementById('failMatch').play() // Play fail to match sound
+                            }
+                        }
+                    },500)
+            }
+            document.querySelector('.memoryGame').appendChild(box)
+        }
+
+        //background music setting
+        const bgMusic = document.getElementById('bgMusic')
+        const bgMusicToggle = document.getElementById('bgMusicChecked')
+
+        bgMusic.volume = 0.1
+
+        bgMusicToggle.addEventListener('change', function() {
+            if (this.checked) {
+                bgMusic.play()
+            } else {
+                bgMusic.pause()
+            }
+        })
+    </script>
+</body>
+</html>
